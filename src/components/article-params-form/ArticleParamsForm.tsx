@@ -6,7 +6,7 @@ import { RadioGroup } from '../radio-group';
 import { Separator } from '../separator';
 
 import styles from './ArticleParamsForm.module.scss';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import {
 	ArticleStateType,
@@ -29,6 +29,7 @@ export const ArticleParamsForm = ({
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [articleStyleState, setArticleStyleState] =
 		useState<ArticleStateType>(defaultArticleState);
+	const sidebarRef = useRef<HTMLDivElement>(null);
 
 	const arrowButtonHandler = () => setIsMenuOpen(!isMenuOpen);
 
@@ -53,10 +54,32 @@ export const ArticleParamsForm = ({
 		setIsMenuOpen(false);
 	};
 
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				sidebarRef.current &&
+				!sidebarRef.current.contains(event.target as Node)
+			) {
+				setIsMenuOpen(false);
+			}
+		};
+
+		if (isMenuOpen) {
+			document.addEventListener('mousedown', handleClickOutside);
+		} else {
+			document.removeEventListener('mousedown', handleClickOutside);
+		}
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [isMenuOpen]);
+
 	return (
 		<>
 			<ArrowButton isOpen={isMenuOpen} onClick={arrowButtonHandler} />
 			<aside
+				ref={sidebarRef}
 				className={`${styles.container} ${
 					isMenuOpen ? styles.container_open : ''
 				}`}>
