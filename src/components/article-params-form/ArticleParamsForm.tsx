@@ -18,6 +18,7 @@ import {
 	fontFamilyOptions,
 	fontSizeOptions,
 } from 'src/constants/articleProps';
+import clsx from 'clsx';
 
 type ArticleParamsFormProps = {
 	setNewSettings: (newSettings: typeof defaultArticleState) => void;
@@ -80,9 +81,10 @@ export const ArticleParamsForm = ({
 			<ArrowButton isOpen={isMenuOpen} onClick={arrowButtonHandler} />
 			<aside
 				ref={sidebarRef}
-				className={`${styles.container} ${
+				className={clsx(
+					styles.container,
 					isMenuOpen ? styles.container_open : ''
-				}`}>
+				)}>
 				<form className={styles.form} onSubmit={submitForm} onReset={resetForm}>
 					<Text as='h1' size={31} weight={800} uppercase>
 						Задайте параметры
