@@ -6,7 +6,7 @@ import { RadioGroup } from '../radio-group';
 import { Separator } from '../separator';
 
 import styles from './ArticleParamsForm.module.scss';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import {
 	ArticleStateType,
@@ -19,6 +19,7 @@ import {
 	fontSizeOptions,
 } from 'src/constants/articleProps';
 import clsx from 'clsx';
+import useClickOutside from './hooks/useClickOutside';
 
 type ArticleParamsFormProps = {
 	setNewSettings: (newSettings: typeof defaultArticleState) => void;
@@ -55,26 +56,7 @@ export const ArticleParamsForm = ({
 		setIsMenuOpen(false);
 	};
 
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				sidebarRef.current &&
-				!sidebarRef.current.contains(event.target as Node)
-			) {
-				setIsMenuOpen(false);
-			}
-		};
-
-		if (isMenuOpen) {
-			document.addEventListener('mousedown', handleClickOutside);
-		} else {
-			document.removeEventListener('mousedown', handleClickOutside);
-		}
-
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, [isMenuOpen]);
+	useClickOutside(sidebarRef, () => setIsMenuOpen(false));
 
 	return (
 		<>
